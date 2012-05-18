@@ -5,6 +5,13 @@
 #
 # == Parameters
 #
+# Module's specific parameters
+#  [*initdbcommand*]
+#    The command to use to inizialize the database
+#
+#  [*configfilehba*]
+#    Location of the hba file
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -205,6 +212,8 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class postgresql (
+  $initdbcommand       = params_lookup( 'initdbcommand' ),
+  $configfilehba       = params_lookup( 'configfilehba' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),
@@ -438,4 +447,8 @@ class postgresql (
     }
   }
 
+  case $::operatingsystem {
+    redhat,centos,scientific: { include postgresql::redhat }
+    default: { }
+  }
 }
