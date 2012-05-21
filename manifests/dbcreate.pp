@@ -11,6 +11,7 @@ define postgresql::dbcreate (
 
   exec { "role_${name}":
     user    => $postgresql::process_user,
+    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "echo \\\\dg | psql | grep ${name} 2>/dev/null",
     command => "echo \"create role ${name} nosuperuser nocreatedb nocreaterole noinherit nologin ; create role ${role} nosuperuser nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant ${name} to ${role}; create database ${name} with owner=${role};\" | /usr/bin/psql",
   }

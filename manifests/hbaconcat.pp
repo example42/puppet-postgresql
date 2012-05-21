@@ -11,7 +11,7 @@ class postgresql::hbaconcat {
   # The File Header. With Puppet comment
   concat::fragment { 'postgresqt_hba_header':
     target  => $postgresql::configfilehba,
-    content => '# File Managed by Puppet\n',
+    content => "# File Managed by Puppet\n",
     order   => '01',
     notify  => Service['postgresql'],
   }
