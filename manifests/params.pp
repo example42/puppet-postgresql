@@ -33,7 +33,11 @@ class postgresql::params {
   }
 
   $service = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'postgresql-8.4',
+    /(?i:Debian|Mint)/        => 'postgresql-8.4',
+    /(?i:Ubuntu)/             => $::operatingsystemrelease ? {
+      '12.04' => 'postgresql',
+      default => 'postgresql-8.4',
+    },
     default                   => 'postgresql',
   }
 
@@ -119,7 +123,7 @@ class postgresql::params {
   ### General module variables that can have a site or per module default
   $monitor = false
   $monitor_tool = ''
-  $monitor_target = $::ipaddress
+  $monitor_target = '127.0.0.1'
   $firewall = false
   $firewall_tool = ''
   $firewall_src = '0.0.0.0/0'
