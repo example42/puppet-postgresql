@@ -102,6 +102,7 @@ class postgresql::params {
   $log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/       => '/var/log/postgresql/postgresql-8.4-main.log',
     /(?i:RedHat|Centos|Scientific)/ => '/var/lib/pgsql/data/pg_log/postgresql*.log',
+    default                         => '/var/lib/pgsql/data/pg_log/postgresql*.log',
   }
 
   $port = '5432'
