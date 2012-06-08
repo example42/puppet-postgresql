@@ -33,7 +33,7 @@ class postgresql::params {
   }
 
   $service = $::operatingsystem ? {
-    /(?i:Debian|Mint)/        => 'postgresql-8.4',
+    /(?i:Debian|Mint)/        => 'postgresql',
     /(?i:Ubuntu)/             => $::operatingsystemrelease ? {
       '12.04' => 'postgresql',
       default => 'postgresql-8.4',
