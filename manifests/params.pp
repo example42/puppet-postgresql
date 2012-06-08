@@ -20,7 +20,7 @@ class postgresql::params {
   }
 
   $configfilehba = $operatingsystem ? {
-    ubuntu  => '/etc/postgresql/8.4/main/pg_hba.conf',
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/postgresql/8.4/main/pg_hba.conf',
     default => '/var/lib/pgsql/data/pg_hba.conf',
   }
 
@@ -33,7 +33,7 @@ class postgresql::params {
   }
 
   $service = $::operatingsystem ? {
-    /(?i:Debian|Mint)/        => 'postgresql-8.4',
+    /(?i:Debian|Mint)/        => 'postgresql',
     /(?i:Ubuntu)/             => $::operatingsystemrelease ? {
       '12.04' => 'postgresql',
       default => 'postgresql-8.4',
