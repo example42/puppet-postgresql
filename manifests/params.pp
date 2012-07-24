@@ -112,7 +112,7 @@ class postgresql::params {
   $my_class = ''
   $source = ''
   $source_dir = ''
-  $source_dir_purge = 'false'
+  $source_dir_purge = false
   $template = ''
   $options = ''
   $service_autorestart = true

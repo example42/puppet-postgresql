@@ -375,7 +375,7 @@ class postgresql (
       notify  => $postgresql::manage_service_autorestart,
       source  => $postgresql::source_dir,
       recurse => true,
-      purge   => $postgresql::source_dir_purge,
+      purge   => $postgresql::bool_source_dir_purge,
       replace => $postgresql::manage_file_replace,
       audit   => $postgresql::manage_audit,
     }
