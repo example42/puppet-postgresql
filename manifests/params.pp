@@ -14,12 +14,16 @@
 #
 class postgresql::params {
 
+  # Calculate OS version (without using lsb facts)
+  $ossplit=split($::operatingsystemrelease, '[.]')
+  $osver=$ossplit[0]
+
   ### Module's specific parameters
-  $initdbcommand = $operatingsystem ? {
+  $initdbcommand = $::operatingsystem ? {
     default => 'service postgresql initdb',
   }
 
-  $configfilehba = $operatingsystem ? {
+  $configfilehba = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/etc/postgresql/8.4/main/pg_hba.conf',
     default => '/var/lib/pgsql/data/pg_hba.conf',
   }
@@ -28,7 +32,10 @@ class postgresql::params {
 
   $package = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/       => 'postgresql-8.4',
-    /(?i:RedHat|Centos|Scientific)/ => 'postgresql84-server',
+    /(?i:RedHat|Centos|Scientific)/ => $osver ? {
+      5       => 'postgresql84-server',
+      default => 'postgresql',
+    },
     default                         => 'postgresql',
   }
 
