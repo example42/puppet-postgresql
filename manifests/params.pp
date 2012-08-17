@@ -34,7 +34,7 @@ class postgresql::params {
     /(?i:Debian|Ubuntu|Mint)/       => 'postgresql-8.4',
     /(?i:RedHat|Centos|Scientific)/ => $osver ? {
       5       => 'postgresql84-server',
-      default => 'postgresql',
+      default => 'postgresql-server',
     },
     default                         => 'postgresql',
   }
