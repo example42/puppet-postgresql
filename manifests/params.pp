@@ -53,7 +53,8 @@ class postgresql::params {
   }
 
   $process = $::operatingsystem ? {
-    default => 'postgres',
+    /(?i:Debian|Ubuntu|Mint)/ => 'postgres',
+    default                   => 'postmaster',
   }
 
   $process_args = $::operatingsystem ? {
