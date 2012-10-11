@@ -1,11 +1,13 @@
 class postgresql::hbaconcat {
 
   include concat::setup
+  include postgresql
 
   concat { "${postgresql::configfilehba}":
-    mode  => '0600',
-    owner => $postgresql::config_file_owner,
-    group => $postgresql::config_file_group,
+    mode    => '0600',
+    owner   => $postgresql::config_file_owner,
+    group   => $postgresql::config_file_group,
+    require => Package['postgresql'],
   }
 
   # The File Header. With Puppet comment
