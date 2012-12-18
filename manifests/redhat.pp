@@ -5,7 +5,7 @@ class postgresql::redhat {
     creates => $postgresql::config_file,
     path    => [ '/sbin', '/bin', '/usr/bin', '/usr/sbin' ],
     require => Package['postgresql'],
-    before  => Service['postgresql'],
+    before  => [ Service['postgresql'], File['postgresql.conf'] ],
   }
 
 }
