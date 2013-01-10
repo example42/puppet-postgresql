@@ -6,11 +6,21 @@
 # == Parameters
 #
 # Module's specific parameters
-#  [*initdbcommand*]
+# [*initdbcommand*]
 #    The command to use to inizialize the database
 #
-#  [*configfilehba*]
+# [*config_file_hba*]
 #    Location of the hba file
+#
+# [*source_hba*]
+#   Sets the content of source parameter for the hba configuration file
+#   Note that single lines of hba file can be managed also (and alternatively)
+#   by postgresql::hba
+#
+# [*template_hba]
+#   Sets the path to the template to use as content for hba configuration file
+#   If defined, postgresql hba config file has: content => content("$template_hba")
+#   Note source_hba and template_hba parameters are mutually exclusive: don't use both
 #
 # Standard class parameters
 # Define the general class behaviour and customizations
@@ -213,7 +223,9 @@
 #
 class postgresql (
   $initdbcommand       = params_lookup( 'initdbcommand' ),
-  $configfilehba       = params_lookup( 'configfilehba' ),
+  $config_file_hba     = params_lookup( 'config_file_hba' ),
+  $source_hba          = params_lookup( 'source_hba' ),
+  $template_hba        = params_lookup( 'template_hba' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),
@@ -337,6 +349,17 @@ class postgresql (
     default   => template($postgresql::template),
   }
 
+  $manage_file_source_hba = $postgresql::source_hba ? {
+    ''        => undef,
+    default   => $postgresql::source_hba,
+  }
+
+  $manage_file_content_hba = $postgresql::template_hba ? {
+    ''        => undef,
+    default   => template($postgresql::template_hba),
+  }
+
+
   ### Managed resources
   package { 'postgresql':
     ensure => $postgresql::manage_package,
@@ -365,6 +388,23 @@ class postgresql (
     replace => $postgresql::manage_file_replace,
     audit   => $postgresql::manage_audit,
   }
+
+  if $postgresql::source_hba or $postgresql::template_hba {
+    file { 'postgresql_hba.conf':
+      ensure  => $postgresql::manage_file,
+      path    => $postgresql::config_file_hba,
+      mode    => $postgresql::config_file_mode,
+      owner   => $postgresql::config_file_owner,
+      group   => $postgresql::config_file_group,
+      require => Package['postgresql'],
+      notify  => $postgresql::manage_service_autorestart,
+      source  => $postgresql::manage_file_source_hba,
+      content => $postgresql::manage_file_content_hba,
+      replace => $postgresql::manage_file_replace,
+      audit   => $postgresql::manage_audit,
+    }
+  }
+
 
   # The whole postgresql configuration directory can be recursively overriden
   if $postgresql::source_dir {

@@ -23,10 +23,13 @@ class postgresql::params {
     default => 'service postgresql initdb',
   }
 
-  $configfilehba = $::operatingsystem ? {
+  $config_file_hba = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/etc/postgresql/8.4/main/pg_hba.conf',
     default => '/var/lib/pgsql/data/pg_hba.conf',
   }
+
+  $source_hba = ''
+  $template_hba = ''
 
   ### Application related parameters
 
