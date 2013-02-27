@@ -17,6 +17,7 @@ define postgresql::dbcreate (
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "echo \\\\dg | psql | grep ${role} 2>/dev/null",
     command => "echo \"create role ${role} nosuperuser nocreatedb nocreaterole noinherit nologin ; alter role ${role} nosuperuser nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant ${name} to ${role}; create database ${name} with OWNER=${role} TEMPLATE=${template} ENCODING='${encoding}' LC_COLLATE='${locale}' LC_CTYPE='${locale}';\" | /usr/bin/psql",
+    require => [Service['postgresql']],
   }
 
   postgresql::hba { "hba_${name}":
