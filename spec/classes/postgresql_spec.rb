@@ -126,11 +126,8 @@ describe 'postgresql' do
     end
   end
 
-  describe 'Test service autorestart', :broken => true do
-    it 'should automatically restart the service, by default' do
-      content = catalogue.resource('file', 'postgresql.conf').send(:parameters)[:notify]
-      content.should == 'Service[postgresql]{:name=>"postgresql"}'
-    end
+  describe 'Test service autorestart' do
+    it { should contain_file('postgresql.conf').with_notify('Service[postgresql]') }
   end
 
   describe 'Test service autorestart' do
