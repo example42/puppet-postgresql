@@ -14,6 +14,9 @@
 #
 class postgresql::params {
 
+  $use_postgresql_repo = false
+  $install_prerequisites = true
+
   # Calculate OS version (without using lsb facts)
   $ossplit=split($::operatingsystemrelease, '[.]')
   $osver=$ossplit[0]
