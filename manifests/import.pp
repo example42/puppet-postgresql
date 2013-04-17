@@ -59,7 +59,7 @@
 define postgresql::import (
   $source_url,
   $extract_command = '',
-  $extract_dir     = $postgresql::data_dir,
+  $extract_dir     = $postgresql::real_data_dir,
   $extracted_file  = '',
   $database        = '',
   $flagfile        = '',
@@ -73,17 +73,17 @@ define postgresql::import (
   $bool_noop = any2bool($noop)
 
   $real_flagfile = $flagfile ? {
-    ''      => "${postgresql::data_dir}/restore_${name}.flag",
+    ''      => "${postgresql::real_data_dir}/restore_${name}.flag",
     default => $flagfile,
   }
 
   $real_log = $log ? {
-    ''      => "${postgresql::data_dir}/restore_${name}.log",
+    ''      => "${postgresql::real_data_dir}/restore_${name}.log",
     default => $log,
   }
 
   $real_errorlog = $errorlog ? {
-    ''      => "${postgresql::data_dir}/restore_${name}_error.log",
+    ''      => "${postgresql::real_data_dir}/restore_${name}_error.log",
     default => $errorlog,
   }
 
@@ -92,7 +92,7 @@ define postgresql::import (
   $source_filename = url_parse($source_url,'filename')
   $source_scheme = url_parse($source_url,'scheme')
   $source_path = url_parse($source_url,'path')
-  
+
   $real_extract_command = $extract_command ? {
     ''      => $source_filetype ? {
       '.tgz'     => 'tar -zxf',

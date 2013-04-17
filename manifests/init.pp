@@ -296,7 +296,7 @@ class postgresql (
   ### Definition of some variables used in the module
   $manage_package = $postgresql::bool_absent ? {
     true  => 'absent',
-    false => $postgresql::version,
+    false => 'present',
   }
 
   $manage_service_enable = $postgresql::bool_disableboot ? {
@@ -373,6 +373,90 @@ class postgresql (
     default   => template($postgresql::template_hba),
   }
 
+  ### Calculation of internal variables according to user input
+  $real_version = $postgresql::version ? {
+    ''      => $postgresql::bool_use_postgresql_repo ? {
+      true      => '9.2',
+      false     => $::operatingsystem ? {
+        /(?i:Debian|Ubuntu|Mint)/       => '8.4',
+        /(?i:RedHat|Centos|Scientific)/ => '',
+        default                         => '8.4',
+      },
+    }
+  }
+  $real_version_short = regsubst($real_version,'\.','')
+
+  $real_package = $postgresql::package ? {
+    ''          => $::operatingsystem ? {
+      /(?i:Debian|Ubuntu|Mint)/       => "postgresql-${real_version}",
+      /(?i:RedHat|Centos|Scientific)/ => "postgresql${real_version_short}-server",
+      default                         => "postgresql${real_version}",
+    },
+    default     => $postgresql::package,
+  }
+
+  $real_service = $postgresql::service ? {
+    ''          => $::operatingsystem ? {
+      /(?i:RedHat|Centos|Scientific)/ => $postgresql::bool_use_postgresql_repo ? {
+        true  => "postgresql-${real_version}",
+        false => "postgresql",
+      },
+      default                         => "postgresql",
+    },
+    default     => $postgresql::service,
+  }
+
+  $real_initdbcommand = $postgresql::initdbcommand ? {
+    ''     => "service $postgresql::real_service initdb",
+    default => $postgresql::initdbcommand,
+  }
+
+  $real_config_dir = $postgresql::config_dir ? {
+    ''          => $operatingsystem ? {
+      /(?i:Debian|Ubuntu|Mint)/       => "/etc/postgresql/${real_version}/main",
+      /(?i:RedHat|Centos|Scientific)/ => "/var/lib/pgsql/${real_version}/data",
+      default                         => '/var/lib/pgsql/data',
+    },
+    default     => $postgresql::config_dir,
+  }
+
+  $real_config_file = "${real_config_dir}/postgresql.conf"
+
+  $real_config_file_hba = "${real_config_dir}/pg_hba.conf"
+
+  $real_pid_file = $postgresql::pid_file ? {
+    ''          => $operatingsystem ? {
+      /(?i:Debian|Ubuntu|Mint)/ => "/var/run/postgresql/${real_version}-main.pid",
+      default                   => "/var/lib/pgsql/data/${real_version}/postmaster.pid",
+    },
+    default     => $postgresql::pid_file,
+  }
+
+  $real_data_dir = $postgresql::data_dir ? {
+    ''          => $operatingsystem ? {
+      /(?i:Debian|Ubuntu|Mint)/ => "/var/lib/postgresql/${real_version}/main",
+      default                   => "/var/lib/pgsql/${real_version}/data",
+    },
+    default     => $postgresql::data_dir,
+  }
+
+  $real_log_dir = $postgresql::log_dir ? {
+    ''        => $::operatingsystem ? {
+      /(?i:Debian|Ubuntu|Mint)/       => "/var/log/postgresql",
+      /(?i:RedHat|Centos|Scientific)/ => "${postgresql::real_data_dir}/pg_log",
+      default                         => "${postgresql::real_data_dir}/pg_log",
+    },
+    default   => $postgresql::log_file,
+  }
+
+  $real_log_file = $postgresql::log_file ? {
+    ''        => $::operatingsystem ? {
+      /(?i:Debian|Ubuntu|Mint)/       => "${real_log_dir}/postgresql-${real_version}-main.log",
+      /(?i:RedHat|Centos|Scientific)/ => "${real_log_dir}/postgresql*.log",
+      default                         => "${real_log_dir}/postgresql*.log",
+    },
+    default   => $postgresql::log_file,
+  }
 
   ### Managed resources
 
@@ -382,12 +466,12 @@ class postgresql (
 
   package { 'postgresql':
     ensure => $postgresql::manage_package,
-    name   => $postgresql::package,
+    name   => $postgresql::real_package,
   }
 
   service { 'postgresql':
     ensure     => $postgresql::manage_service_ensure,
-    name       => $postgresql::service,
+    name       => $postgresql::real_service,
     enable     => $postgresql::manage_service_enable,
     hasstatus  => $postgresql::service_status,
     pattern    => $postgresql::process,
@@ -396,7 +480,7 @@ class postgresql (
 
   file { 'postgresql.conf':
     ensure  => $postgresql::manage_file,
-    path    => $postgresql::config_file,
+    path    => $postgresql::real_config_file,
     mode    => $postgresql::config_file_mode,
     owner   => $postgresql::config_file_owner,
     group   => $postgresql::config_file_group,
@@ -411,7 +495,7 @@ class postgresql (
   if $postgresql::source_hba or $postgresql::template_hba {
     file { 'postgresql_hba.conf':
       ensure  => $postgresql::manage_file,
-      path    => $postgresql::config_file_hba,
+      path    => $postgresql::real_config_file_hba,
       mode    => $postgresql::config_file_mode,
       owner   => $postgresql::config_file_owner,
       group   => $postgresql::config_file_group,
@@ -429,7 +513,7 @@ class postgresql (
   if $postgresql::source_dir {
     file { 'postgresql.dir':
       ensure  => directory,
-      path    => $postgresql::config_dir,
+      path    => $postgresql::real_config_dir,
       require => Package['postgresql'],
       notify  => $postgresql::manage_service_autorestart,
       source  => $postgresql::source_dir,
@@ -470,7 +554,7 @@ class postgresql (
     monitor::process { 'postgresql_process':
       process  => $postgresql::process,
       service  => $postgresql::service,
-      pidfile  => $postgresql::pid_file,
+      pidfile  => $postgresql::real_pid_file,
       user     => $postgresql::process_user,
       argument => $postgresql::process_args,
       tool     => $postgresql::monitor_tool,

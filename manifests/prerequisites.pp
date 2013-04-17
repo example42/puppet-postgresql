@@ -19,7 +19,7 @@ class postgresql::prerequisites {
   if $postgresql::bool_use_postgresql_repo {
     case $::operatingsystem {
       redhat,centos,scientific,oraclelinux : {
-        require yum::repo::pgdg91
+        require yum::repo::pgdg92
       }
       ubuntu,debian : {
         require apt::repo::postgresql

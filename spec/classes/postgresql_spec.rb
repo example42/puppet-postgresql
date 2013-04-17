@@ -13,11 +13,6 @@ describe 'postgresql' do
     it { should contain_file('postgresql.conf').with_ensure('present') }
   end
 
-  describe 'Test installation of a specific version' do
-    let(:params) { {:version => '1.0.42' } }
-    it { should contain_package('postgresql').with_ensure('1.0.42') }
-  end
-
   describe 'Test standard installation with monitoring and firewalling' do
     let(:params) { {:monitor => true , :firewall => true, :port => '42', :protocol => 'tcp' } }
 
