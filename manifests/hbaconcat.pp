@@ -13,7 +13,7 @@ class postgresql::hbaconcat {
   # The File Header. With Puppet comment
   concat::fragment { 'postgresql_hba_header':
     target  => $postgresql::real_config_file_hba,
-    content => template('postgresql/concat_hba_header.erb'),
+    content => template("${postgresql::template_hba_header}"),
     order   => '01',
     notify  => Service['postgresql'],
   }
@@ -21,7 +21,7 @@ class postgresql::hbaconcat {
   # The File Footer. With default acls
   concat::fragment { 'postgresql_hba_footer':
     target  => $postgresql::real_config_file_hba,
-    content => template('postgresql/concat_hba_footer.erb'),
+    content => template("${postgresql::template_hba_footer}"),
     order   => '90',
     notify  => Service['postgresql'],
   }

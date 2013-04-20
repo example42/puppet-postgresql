@@ -27,10 +27,16 @@
 #   Note that single lines of hba file can be managed also (and alternatively)
 #   by postgresql::hba
 #
-# [*template_hba]
+# [*template_hba*]
 #   Sets the path to the template to use as content for hba configuration file
 #   If defined, postgresql hba config file has: content => content("$template_hba")
 #   Note source_hba and template_hba parameters are mutually exclusive: don't use both
+#
+# [*template_hba_header*]
+#   Path to the header's template when using concat
+#
+# [*template_hba_footer*]
+#   Path to the footer's template when using concat
 #
 # Standard class parameters
 # Define the general class behaviour and customizations
@@ -238,6 +244,8 @@ class postgresql (
   $config_file_hba       = params_lookup( 'config_file_hba' ),
   $source_hba            = params_lookup( 'source_hba' ),
   $template_hba          = params_lookup( 'template_hba' ),
+  $template_hba_header   = params_lookup( 'template_hba_header' ),
+  $template_hba_footer   = params_lookup( 'template_hba_footer' ),
   $my_class              = params_lookup( 'my_class' ),
   $source                = params_lookup( 'source' ),
   $source_dir            = params_lookup( 'source_dir' ),
