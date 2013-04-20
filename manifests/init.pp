@@ -10,6 +10,10 @@
 # [*use_postgresql_repo*]
 #   Define if you want to use Official PostgreSQL repositories
 #   to install packages. Default: false (OS default package is used)
+#   Note that when [*use_postgresql_repo*] is set to true AND [*version*]
+#   is set to a specific version, this version takes precedence, no matter
+#   if the version in the postgresql repository is newer than the one you
+#   set in [*version*]
 #
 # [*install_prerequisites*]
 #   Set to false if you don't want install this module's prerequisites.
@@ -83,6 +87,8 @@
 #   Default: present. Can be 'latest' or a specific version number.
 #   Note that if the argument absent (see below) is set to true, the
 #   package is removed, whatever the value of version parameter.
+#   Please check [*use_postgresql_repo*] to see the expected behaviour when 
+#   both set. 
 #
 # [*absent*]
 #   Set to 'true' to remove package(s) installed by module
