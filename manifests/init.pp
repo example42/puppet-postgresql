@@ -10,6 +10,10 @@
 # [*use_postgresql_repo*]
 #   Define if you want to use Official PostgreSQL repositories
 #   to install packages. Default: false (OS default package is used)
+#   Note that when [*use_postgresql_repo*] is set to true AND [*version*]
+#   is set to a specific version, this version takes precedence, no matter
+#   if the version in the postgresql repository is newer than the one you
+#   set in [*version*]
 #
 # [*install_prerequisites*]
 #   Set to false if you don't want install this module's prerequisites.
@@ -27,10 +31,16 @@
 #   Note that single lines of hba file can be managed also (and alternatively)
 #   by postgresql::hba
 #
-# [*template_hba]
+# [*template_hba*]
 #   Sets the path to the template to use as content for hba configuration file
 #   If defined, postgresql hba config file has: content => content("$template_hba")
 #   Note source_hba and template_hba parameters are mutually exclusive: don't use both
+#
+# [*template_hba_header*]
+#   Path to the header's template when using concat
+#
+# [*template_hba_footer*]
+#   Path to the footer's template when using concat
 #
 # Standard class parameters
 # Define the general class behaviour and customizations
@@ -77,6 +87,8 @@
 #   Default: present. Can be 'latest' or a specific version number.
 #   Note that if the argument absent (see below) is set to true, the
 #   package is removed, whatever the value of version parameter.
+#   Please check [*use_postgresql_repo*] to see the expected behaviour when 
+#   both set. 
 #
 # [*absent*]
 #   Set to 'true' to remove package(s) installed by module
@@ -238,6 +250,8 @@ class postgresql (
   $config_file_hba       = params_lookup( 'config_file_hba' ),
   $source_hba            = params_lookup( 'source_hba' ),
   $template_hba          = params_lookup( 'template_hba' ),
+  $template_hba_header   = params_lookup( 'template_hba_header' ),
+  $template_hba_footer   = params_lookup( 'template_hba_footer' ),
   $my_class              = params_lookup( 'my_class' ),
   $source                = params_lookup( 'source' ),
   $source_dir            = params_lookup( 'source_dir' ),
@@ -382,7 +396,8 @@ class postgresql (
         /(?i:RedHat|Centos|Scientific)/ => '',
         default                         => '8.4',
       },
-    }
+    },
+    default => $postgresql::version,
   }
   $real_version_short = regsubst($real_version,'\.','')
 

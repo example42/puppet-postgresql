@@ -16,8 +16,8 @@ define postgresql::hba (
   concat::fragment { "hba_fragment_${name}":
     target  => $postgresql::real_config_file_hba,
     content => $type ? {
-      "local" => "${type}	${database}	${user}	${method}	${option}\n",
-      default => "${type}	${database}	${user}	${address}	${method}	${option}\n",
+      'local' => "${type}	${database}	${user}	${method}	${option}\n",
+      default => "${type}	${database}	${user}	${address}	${method}   ${option}\n",
     },
     order   => $order,
     ensure  => $ensure,
