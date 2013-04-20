@@ -396,7 +396,7 @@ class postgresql (
         /(?i:RedHat|Centos|Scientific)/ => '',
         default                         => '8.4',
       },
-    }
+    },
     default => $postgresql::version,
   }
   $real_version_short = regsubst($real_version,'\.','')
