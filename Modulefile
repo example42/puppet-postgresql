@@ -1,4 +1,4 @@
-name 'example42-postgresql'
+name 'netmanagers-postgresql'
 version '2.0.7'
 
 author 'Alessandro Franceschi'
