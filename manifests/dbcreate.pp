@@ -10,7 +10,10 @@ define postgresql::dbcreate (
   $conntype     = 'host',
   $address      = '127.0.0.1/32',
   $auth_method  = 'md5',
-  $auth_options = '' ) {
+  $auth_options = ''
+) {
+
+  include postgresql
 
   exec { "role_${name}":
     user    => $postgresql::process_user,
