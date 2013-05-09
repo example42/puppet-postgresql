@@ -59,18 +59,32 @@
 define postgresql::import (
   $source_url,
   $extract_command = '',
-  $extract_dir     = $postgresql::real_data_dir,
+  $extract_dir     = '',
   $extracted_file  = '',
   $database        = '',
   $flagfile        = '',
   $log             = '',
   $errorlog        = '',
   $path            = '/bin:/sbin:/usr/bin:/usr/sbin',
-  $user            = $postgresql::process_user,
+  $user            = '',
   $exec_env        = [],
-  $noop            = false ) {
+  $noop            = false
+) {
+
+  include postgresql
+
 
   $bool_noop = any2bool($noop)
+
+  $real_extract_dir = $extract_dir ? {
+    ''      => $postgresql::real_data_dir,
+    default => $extract_dir,
+  }
+
+  $real_user = $user ? {
+    ''      => $postgresql::process_user,
+    default => $user,
+  }
 
   $real_flagfile = $flagfile ? {
     ''      => "${postgresql::real_data_dir}/restore_${name}.flag",
@@ -120,9 +134,9 @@ define postgresql::import (
 
   if $source_scheme != 'file' {
     exec { "Retrieve_${source_url}":
-      cwd         => $extract_dir,
+      cwd         => $real_extract_dir,
       command     => "wget ${source_url}",
-      creates     => "${extract_dir}/${source_filename}",
+      creates     => "${real_extract_dir}/${source_filename}",
       before      => $before_extract,
       timeout     => 3600,
       path        => $path,
@@ -133,11 +147,11 @@ define postgresql::import (
 
   if $real_extract_command {
     exec { "Extract_postgres_import_${name}":
-      cwd         => $extract_dir,
+      cwd         => $real_extract_dir,
       command     => "${real_extract_command} ${extract_dir}/${source_filename}",
-      user        => $user,
-      unless      => "ls ${extract_dir}/${real_extracted_file}",
-      creates     => "${extract_dir}/${real_extracted_file}",
+      user        => $real_user,
+      unless      => "ls ${real_extract_dir}/${real_extracted_file}",
+      creates     => "${real_extract_dir}/${real_extracted_file}",
       before      => Exec["Import_${name}"],
       path        => $path,
       environment => $exec_env,
@@ -147,7 +161,7 @@ define postgresql::import (
   }
 
   exec { "Import_${name}":
-    cwd     => $extract_dir,
+    cwd     => $real_extract_dir,
     user    => $postgresql::process_user,
     path    => $path,
     creates => "${real_flagfile}",
