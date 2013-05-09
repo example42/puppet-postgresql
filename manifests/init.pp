@@ -387,26 +387,26 @@ class postgresql (
     default   => template($postgresql::template_hba),
   }
 
-  ### Calculation of internal variables according to user input
+### Calculation of internal variables according to user input
   $real_version = $postgresql::version ? {
     ''      => $postgresql::bool_use_postgresql_repo ? {
-      true      => '9.2',
-      false     => $::operatingsystem ? {
+      true  => '9.2',
+      false => $::operatingsystem ? {
         'Debian'                        => $::lsbmajdistrelease ? {
-		7       => '9.1',
-		default => '8.4',
-	},
-	'Ubuntu'                        => $::lsbmajdistrelease ? {
-		12      => '9.1',
-		13      => '9.1',
-		default => '8.4',
-	},
-	'Mint'                          => $::lsbmajdistrelase ? {
-		13      => '9.1',
-		14      => '9.1',
-		15      => '9.1',
-		default => '8.4',
-	},
+          7       => '9.1',
+          default => '8.4',
+        },
+        'Ubuntu'                        => $::lsbmajdistrelease ? {
+          12      => '9.1',
+          13      => '9.1',
+          default => '8.4',
+        },
+        'Mint'                          => $::lsbmajdistrelase ? {
+          13      => '9.1',
+          14      => '9.1',
+          15      => '9.1',
+          default => '8.4',
+        },
         /(?i:RedHat|Centos|Scientific)/ => '',
         default                         => '8.4',
       },
