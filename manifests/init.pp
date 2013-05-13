@@ -87,8 +87,8 @@
 #   Default: present. Can be 'latest' or a specific version number.
 #   Note that if the argument absent (see below) is set to true, the
 #   package is removed, whatever the value of version parameter.
-#   Please check [*use_postgresql_repo*] to see the expected behaviour when 
-#   both set. 
+#   Please check [*use_postgresql_repo*] to see the expected behaviour when
+#   both set.
 #
 # [*absent*]
 #   Set to 'true' to remove package(s) installed by module
@@ -387,12 +387,26 @@ class postgresql (
     default   => template($postgresql::template_hba),
   }
 
-  ### Calculation of internal variables according to user input
+### Calculation of internal variables according to user input
   $real_version = $postgresql::version ? {
     ''      => $postgresql::bool_use_postgresql_repo ? {
-      true      => '9.2',
-      false     => $::operatingsystem ? {
-        /(?i:Debian|Ubuntu|Mint)/       => '8.4',
+      true  => '9.2',
+      false => $::operatingsystem ? {
+        'Debian'                        => $::lsbmajdistrelease ? {
+          7       => '9.1',
+          default => '8.4',
+        },
+        'Ubuntu'                        => $::lsbmajdistrelease ? {
+          12      => '9.1',
+          13      => '9.1',
+          default => '8.4',
+        },
+        'Mint'                          => $::lsbmajdistrelase ? {
+          13      => '9.1',
+          14      => '9.1',
+          15      => '9.1',
+          default => '8.4',
+        },
         /(?i:RedHat|Centos|Scientific)/ => '',
         default                         => '8.4',
       },
@@ -414,20 +428,20 @@ class postgresql (
     ''          => $::operatingsystem ? {
       /(?i:RedHat|Centos|Scientific)/ => $postgresql::bool_use_postgresql_repo ? {
         true  => "postgresql-${real_version}",
-        false => "postgresql",
+        false => 'postgresql',
       },
-      default                         => "postgresql",
+      default                         => 'postgresql',
     },
     default     => $postgresql::service,
   }
 
   $real_initdbcommand = $postgresql::initdbcommand ? {
-    ''     => "service $postgresql::real_service initdb",
+    ''     => "service ${postgresql::real_service} initdb",
     default => $postgresql::initdbcommand,
   }
 
   $real_config_dir = $postgresql::config_dir ? {
-    ''          => $operatingsystem ? {
+    ''          => $::operatingsystem ? {
       /(?i:Debian|Ubuntu|Mint)/       => "/etc/postgresql/${real_version}/main",
       /(?i:RedHat|Centos|Scientific)/ => "/var/lib/pgsql/${real_version}/data",
       default                         => '/var/lib/pgsql/data',
@@ -440,7 +454,7 @@ class postgresql (
   $real_config_file_hba = "${real_config_dir}/pg_hba.conf"
 
   $real_pid_file = $postgresql::pid_file ? {
-    ''          => $operatingsystem ? {
+    ''          => $::operatingsystem ? {
       /(?i:Debian|Ubuntu|Mint)/ => "/var/run/postgresql/${real_version}-main.pid",
       default                   => "/var/lib/pgsql/data/${real_version}/postmaster.pid",
     },
@@ -448,7 +462,7 @@ class postgresql (
   }
 
   $real_data_dir = $postgresql::data_dir ? {
-    ''          => $operatingsystem ? {
+    ''          => $::operatingsystem ? {
       /(?i:Debian|Ubuntu|Mint)/ => "/var/lib/postgresql/${real_version}/main",
       default                   => "/var/lib/pgsql/${real_version}/data",
     },
@@ -457,7 +471,7 @@ class postgresql (
 
   $real_log_dir = $postgresql::log_dir ? {
     ''        => $::operatingsystem ? {
-      /(?i:Debian|Ubuntu|Mint)/       => "/var/log/postgresql",
+      /(?i:Debian|Ubuntu|Mint)/       => '/var/log/postgresql',
       /(?i:RedHat|Centos|Scientific)/ => "${postgresql::real_data_dir}/pg_log",
       default                         => "${postgresql::real_data_dir}/pg_log",
     },
