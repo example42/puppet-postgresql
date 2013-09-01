@@ -5,22 +5,24 @@ define postgresql::hba (
   $database,
   $user,
   $method,
-  $ensure = 'present',
-  $order  = '50',
+  $ensure  = 'present',
+  $order   = '50',
   $address = false,
   $option  = '' ) {
 
   include concat::setup
   include postgresql::hbaconcat
 
+  $content = $type ? {
+    'local' => "${type} ${database} ${user} ${method} ${option}\n",
+    default => "${type} ${database} ${user} ${address}  ${method}   ${option}\n",
+  }
+
   concat::fragment { "hba_fragment_${name}":
-    target  => $postgresql::real_config_file_hba,
-    content => $type ? {
-      'local' => "${type}	${database}	${user}	${method}	${option}\n",
-      default => "${type}	${database}	${user}	${address}	${method}   ${option}\n",
-    },
-    order   => $order,
     ensure  => $ensure,
+    target  => $postgresql::real_config_file_hba,
+    content => $content,
+    order   => $order,
     notify  => Service['postgresql'],
   }
 

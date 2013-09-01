@@ -1,3 +1,5 @@
+# Define: postgresql::redhat
+#
 class postgresql::redhat {
 
   exec { 'postgresql_initdb':
