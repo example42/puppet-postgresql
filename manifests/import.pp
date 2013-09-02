@@ -16,7 +16,7 @@
 #   downloaded. Default: the postgresql data dir
 #
 # [*extracted_file*]
-#   The name of a directory or file created after the extraction 
+#   The name of a directory or file created after the extraction
 #   Needed only if its name is different from the downloaded file name
 #   (without suffixes). Optional.
 #
@@ -27,7 +27,7 @@
 # [*exec_env*]
 #   Define any additional environment variables to be used with the
 #   exec commands. Note that if you use this to set PATH, it will
-#   override the path attribute. Multiple environment variables 
+#   override the path attribute. Multiple environment variables
 #   should be specified as an array.
 #   Example: [ http_proxy=http://proxy.example42.com:3128 ]
 
@@ -52,8 +52,8 @@
 #   Path of the error log of the import operations.
 #   Default: ${postgresql::data_dir}/restore_${name}_error.log
 #
-# [*noop*]
-#   If to actually execute the import. Default: false
+# [*noops*]
+#   If to actually execute the import. Default: noops
 #   Set to true if you want to test a dry run
 #
 define postgresql::import (
@@ -68,13 +68,11 @@ define postgresql::import (
   $path            = '/bin:/sbin:/usr/bin:/usr/sbin',
   $user            = '',
   $exec_env        = [],
-  $noop            = false
+  $noops           = undef
 ) {
 
   include postgresql
 
-
-  $bool_noop = any2bool($noop)
 
   $real_extract_dir = $extract_dir ? {
     ''      => $postgresql::real_data_dir,
@@ -141,7 +139,7 @@ define postgresql::import (
       timeout     => 3600,
       path        => $path,
       environment => $exec_env,
-      noop        => $bool_noop,
+      noop        => $noops,
     }
   }
 
@@ -156,7 +154,7 @@ define postgresql::import (
       path        => $path,
       environment => $exec_env,
       timeout     => 3600,
-      noop        => $bool_noop,
+      noop        => $noops,
     }
   }
 
@@ -164,11 +162,11 @@ define postgresql::import (
     cwd     => $real_extract_dir,
     user    => $postgresql::process_user,
     path    => $path,
-    creates => "${real_flagfile}",
+    creates => $real_flagfile,
     require => Service['postgresql'],
     command => "psql -f ${real_extracted_file} ${database} > ${real_log} 2> ${real_errorlog} && touch ${real_flagfile}",
     timeout => 3600,
-    noop    => $bool_noop,
+    noop    => $noops,
   }
 
 }
