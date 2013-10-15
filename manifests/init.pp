@@ -582,7 +582,7 @@ class postgresql (
     }
     monitor::process { 'postgresql_process':
       process  => $postgresql::process,
-      service  => $postgresql::service,
+      service  => $postgresql::real_service,
       pidfile  => $postgresql::real_pid_file,
       user     => $postgresql::process_user,
       argument => $postgresql::process_args,
