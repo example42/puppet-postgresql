@@ -153,6 +153,7 @@ describe 'postgresql' do
   end
 
   describe 'Test Firewall Tools Integration' do
+    let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
     let(:params) { {:firewall => true, :firewall_tool => "iptables" , :protocol => "tcp" , :port => "42" } }
 
     it 'should generate correct firewall define' do
@@ -162,6 +163,7 @@ describe 'postgresql' do
   end
 
   describe 'Test OldGen Module Set Integration' do
+    let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
     let(:params) { {:monitor => "yes" , :monitor_tool => "puppi" , :firewall => "yes" , :firewall_tool => "iptables" , :puppi => "yes" , :port => "42" , :protocol => 'tcp' } }
 
     it 'should generate monitor resources' do

@@ -2,7 +2,6 @@
 #
 class postgresql::hbaconcat {
 
-  include concat::setup
   include postgresql
 
   concat { $postgresql::real_config_file_hba:
