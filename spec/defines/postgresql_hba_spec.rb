@@ -4,7 +4,7 @@ describe 'postgresql::hba', :type => :define do
 
   let(:title) { 'postgresql::hba' }
   let(:node) { 'rspec.example42.com' }
-  let(:facts) { { :arch => 'i386', :operatingsystem => 'Debian' } }
+  let(:facts) { { :arch => 'i386', :operatingsystem => 'Debian', :concat_basedir => '/var/lib/puppet/concat' } }
   let(:params) { {
     :type     => 'local',
     :database => 'all',
