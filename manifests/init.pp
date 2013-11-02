@@ -456,7 +456,7 @@ class postgresql (
   $real_pid_file = $postgresql::pid_file ? {
     ''          => $::operatingsystem ? {
       /(?i:Debian|Ubuntu|Mint)/ => "/var/run/postgresql/${real_version}-main.pid",
-      default                   => "/var/lib/pgsql/data/${real_version}/postmaster.pid",
+      default                   => "/var/lib/pgsql/${real_version}/data/postmaster.pid",
     },
     default     => $postgresql::pid_file,
   }
