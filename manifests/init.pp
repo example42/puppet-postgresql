@@ -475,7 +475,7 @@ class postgresql (
       /(?i:RedHat|Centos|Scientific)/ => "${postgresql::real_data_dir}/pg_log",
       default                         => "${postgresql::real_data_dir}/pg_log",
     },
-    default   => $postgresql::log_file,
+    default   => $postgresql::log_dir,
   }
 
   $real_log_file = $postgresql::log_file ? {
