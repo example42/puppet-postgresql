@@ -33,6 +33,11 @@ class postgresql (
   $init_file_template        = undef,
   $init_file_options_hash    = { } ,
 
+  $hba_file_path             = undef,
+  $hba_file_template         = undef,
+  $hba_file_content          = undef,
+  $hba_file_options_hash     = { } ,
+
   $config_dir_path           = undef,
   $config_dir_source         = undef,
   $config_dir_purge          = false,
@@ -68,6 +73,7 @@ class postgresql (
   if $firewall_options_hash { validate_hash($firewall_options_hash) }
 
   $manage_config_file_content = default_content($config_file_content, $config_file_template)
+  $manage_hba_file_content = default_content($hba_file_content, $hba_file_template)
 
   $manage_config_file_notify  = $config_file_notify ? {
     'class_default' => 'Service[postgresql]',
@@ -142,6 +148,19 @@ class postgresql (
     }
   }
 
+  if $postgresql::hba_file_template {
+    file { $postgresql::hba_file_path:
+      ensure  => $postgresql::config_file_ensure,
+      path    => $postgresql::hba_file_path,
+      mode    => $postgresql::config_file_mode,
+      owner   => $postgresql::config_file_owner,
+      group   => $postgresql::config_file_group,
+      content => $postgresql::manage_hba_file_content,
+      notify  => $postgresql::manage_config_file_notify,
+      require => $postgresql::config_file_require,
+      alias   => 'postgresql.hba.conf',
+    }
+  }
 
   if $postgresql::config_dir_source {
     file { $postgresql::config_dir_path:
