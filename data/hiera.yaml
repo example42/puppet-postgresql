@@ -2,4 +2,5 @@
  :hierarchy:
    - "install_class/%{install_class}" 
    - "operatingsystem/%{::operatingsystem}-%{::operatingsystemrelease}"
+   - "operatingsystem/%{::operatingsystem}"
    - common
