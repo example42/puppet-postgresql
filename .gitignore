@@ -1,9 +1,7 @@
-/.gradle
-/metadata.json
-/.rvmrc
-build
-pkg/
-Session.vim
+.*.sw?
+pkg
 spec/fixtures
-.*.sw[a-z]
+.rspec_system
+metadata.json
 *.un~
+Gemfile.lock

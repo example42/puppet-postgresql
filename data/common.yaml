@@ -1,0 +1,10 @@
+---
+postgresql::package_name: 'postgresql'
+postgresql::service_name: 'postgresql'
+postgresql::config_file_path:  '/etc/postgresql/postgresql.conf'
+postgresql::config_file_mode: '0644'
+postgresql::config_file_owner: 'root'
+postgresql::config_file_group: 'root'
+postgresql::config_dir_path: '/etc/postgresql'
+postgresql::init_file_path:  '/etc/sysconfig/postgresql'
+postgresql::process_user: 'postgresql'

@@ -1,0 +1,7 @@
+---
+ :hierarchy:
+   - "%{repo_class}/%{::osfamily}" 
+   - "%{::osfamily}/%{::operatingsystem}-%{::lsbmajdistrelease}"
+   - "%{::osfamily}/%{::operatingsystem}"
+   - "%{::osfamily}"
+   - common
