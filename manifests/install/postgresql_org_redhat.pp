@@ -5,6 +5,8 @@
 #
 class postgresql::install::postgresql_org_redhat {
 
+  include postgresql::install
+
   yum::managed_yumrepo { "pgdg${::postgresql::version}":
     descr          => "PostgreSQL ${postgresql::version_short} \$releasever - \$basearch",
     baseurl        => "http://yum.postgresql.org/${postgresql::version}/redhat/rhel-\$releasever-\$basearch",
@@ -13,6 +15,6 @@ class postgresql::install::postgresql_org_redhat {
     gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG',
     gpgkey_source  => 'puppet:///modules/yum/rpm-gpg/RPM-GPG-KEY-PGDG',
     priority       => 20,
-  }
+  } -> Class['postgresql::install']
 
 }

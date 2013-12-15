@@ -1,9 +1,13 @@
 ---
 postgresql::version: "%{postgresql::version}"
-postgresql::package_name: "postgresql-%{postgresql::version}"
-postgresql::service_name: "postgresql-%{postgresql::version}"
-postgresql::config_file_path:  "/etc/postgresql/%{postgresql::version}/main/postgresql.conf"
-postgresql::config_dir_path: "/etc/postgresql/%{postgresql::version}/main"
-postgresql::hba_file_path:  "/etc/postgresql/%{postgresql::version}/main/pg_hba.conf"
+postgresql::package_name: 'postgresql'
+postgresql::service_name: 'postgresql'
+postgresql::config_file_path:  "/var/lib/pgsql/data/postgresql.conf"
+postgresql::config_dir_path: "/var/lib/pgsql/data"
+postgresql::hba_file_path:  "/var/lib/pgsql/data/pg_hba.conf"
 postgresql::data_dir_path: "/var/lib/postgresql/%{postgresql::version}/main"
 postgresql::log_dir_path: '/var/log/postgresql'
+postgresql::process_user: 'postgresql'
+postgresql::log_file_path: '/var/svc/log/application-database-postgresql:default.log'
+postgresql::initdb_exec_command: 'initdb -E UTF-8 -X /pgdata1/wal /var/lib/pgsql/data'
+

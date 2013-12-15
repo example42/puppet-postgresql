@@ -46,8 +46,11 @@ class postgresql (
 
   $conf_hash                 = undef,
 
+  $initdb_exec_command       = undef,
+
   $install_class             = 'postgresql::install',
   $config_class              = 'postgresql::config',
+  $setup_class               = 'postgresql::setup',
   $service_class             = 'postgresql::service',
 
   $monitor_class             = undef,
@@ -59,6 +62,8 @@ class postgresql (
   $scope_hash_filter         = '(uptime.*|timestamp)',
 
   $process_user              = undef,
+  $log_dir_path              = undef,
+  $log_file_path             = undef,
   $tcp_port                  = undef,
   $udp_port                  = undef,
 
@@ -109,6 +114,7 @@ class postgresql (
 
   include $postgresql::install_class
   include $postgresql::config_class
+  include $postgresql::setup_class
   include $postgresql::service_class
 
   anchor { 'postgresql::server::start': }
@@ -117,6 +123,7 @@ class postgresql (
   Anchor['postgresql::server::start'] ->
   Class[$postgresql::install_class] ->
   Class[$postgresql::config_class] ->
+  Class[$postgresql::setup_class] ->
   Class[$postgresql::service_class] ->
   Anchor['postgresql::server::end']
 

@@ -5,6 +5,8 @@
 #
 class postgresql::install::postgresql_org_debian {
 
+  include postgresql::install
+
   apt::repository { 'postgresql':
     url             => 'http://apt.postgresql.org/pub/repos/apt',
     distro          => "${::lsbdistcodename}-pgdg",
@@ -12,6 +14,6 @@ class postgresql::install::postgresql_org_debian {
     key_url         => 'https://www.postgresql.org/media/keys/ACCC4CF8.asc',
     key             => 'ACCC4CF8',
     keyring_package => 'pgdg-keyring',
-  }
+  } -> Class['postgresql::install']
 
 }
