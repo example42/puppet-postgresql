@@ -1,4 +1,5 @@
 ---
+postgresql::version: '9.3'
 postgresql::package_name: 'postgresql'
 postgresql::service_name: 'postgresql'
 postgresql::config_file_path:  '/etc/postgresql/postgresql.conf'
@@ -8,4 +9,5 @@ postgresql::config_file_group: 'root'
 postgresql::config_dir_path: '/etc/postgresql'
 postgresql::init_file_path:  '/etc/sysconfig/postgresql'
 postgresql::hba_file_path:  '/etc/postgresql/pg_hba.conf'
+postgresql::log_dir_path: '/var/log/postgresql'
 postgresql::process_user: 'postgresql'

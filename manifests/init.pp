@@ -11,6 +11,8 @@
 #
 class postgresql (
 
+  $version                   = undef,
+
   $package_name              = undef,
   $package_ensure            = 'present',
 
@@ -19,8 +21,7 @@ class postgresql (
   $service_enable            = true,
 
   $config_file_path          = undef,
-  $config_file_require       = 'Package[postgresql]',
-  $config_file_notify        = 'Service[postgresql]',
+  $config_file_notify        = 'Class[postgresql::service]',
   $config_file_source        = undef,
   $config_file_template      = undef,
   $config_file_content       = undef,
@@ -45,8 +46,9 @@ class postgresql (
 
   $conf_hash                 = undef,
 
-  $dependency_class          = undef,
-  $my_class                  = undef,
+  $install_class             = 'postgresql::install',
+  $config_class              = 'postgresql::config',
+  $service_class             = 'postgresql::service',
 
   $monitor_class             = undef,
   $monitor_options_hash      = { } ,
@@ -74,9 +76,10 @@ class postgresql (
 
   $manage_config_file_content = default_content($config_file_content, $config_file_template)
   $manage_hba_file_content = default_content($hba_file_content, $hba_file_template)
+  $version_short = regsubst($version,'\.','')
 
   $manage_config_file_notify  = $config_file_notify ? {
-    'class_default' => 'Service[postgresql]',
+    'undef'         => undef,
     ''              => undef,
     default         => $config_file_notify,
   }
@@ -102,98 +105,23 @@ class postgresql (
   }
 
 
-  # Dependency class
+  # Classes and resources
 
-  if $postgresql::dependency_class {
-    include $postgresql::dependency_class
-  }
+  include $postgresql::install_class
+  include $postgresql::config_class
+  include $postgresql::service_class
 
+  anchor { 'postgresql::server::start': }
+  anchor { 'postgresql::server::end': }
 
-  # Resources managed
-
-  if $postgresql::package_name {
-    package { $postgresql::package_name:
-      ensure   => $postgresql::package_ensure,
-      name     => $postgresql::package_name,
-      alias    => '$postgresql',
-    }
-  }
-
-  if $postgresql::config_file_path {
-    file { $postgresql::config_file_path:
-      ensure  => $postgresql::config_file_ensure,
-      path    => $postgresql::config_file_path,
-      mode    => $postgresql::config_file_mode,
-      owner   => $postgresql::config_file_owner,
-      group   => $postgresql::config_file_group,
-      source  => $postgresql::config_file_source,
-      content => $postgresql::manage_config_file_content,
-      notify  => $postgresql::manage_config_file_notify,
-      require => $postgresql::config_file_require,
-      alias   => 'postgresql.conf',
-    }
-  }
-
-  if $postgresql::init_file_template {
-    file { $postgresql::init_file_path:
-      ensure  => $postgresql::config_file_ensure,
-      path    => $postgresql::init_file_path,
-      mode    => $postgresql::config_file_mode,
-      owner   => $postgresql::config_file_owner,
-      group   => $postgresql::config_file_group,
-      content => template($postgresql::init_file_template),
-      notify  => $postgresql::manage_config_file_notify,
-      require => $postgresql::config_file_require,
-      alias   => 'postgresql.init.conf',
-    }
-  }
-
-  if $postgresql::hba_file_template {
-    file { $postgresql::hba_file_path:
-      ensure  => $postgresql::config_file_ensure,
-      path    => $postgresql::hba_file_path,
-      mode    => $postgresql::config_file_mode,
-      owner   => $postgresql::config_file_owner,
-      group   => $postgresql::config_file_group,
-      content => $postgresql::manage_hba_file_content,
-      notify  => $postgresql::manage_config_file_notify,
-      require => $postgresql::config_file_require,
-      alias   => 'postgresql.hba.conf',
-    }
-  }
-
-  if $postgresql::config_dir_source {
-    file { $postgresql::config_dir_path:
-      ensure  => $postgresql::config_dir_ensure,
-      path    => $postgresql::config_dir_path,
-      source  => $postgresql::config_dir_source,
-      recurse => $postgresql::config_dir_recurse,
-      purge   => $postgresql::config_dir_purge,
-      force   => $postgresql::config_dir_purge,
-      notify  => $postgresql::manage_config_file_notify,
-      require => $postgresql::config_file_require,
-      alias   => 'postgresql.dir',
-    }
-  }
-
-  if $postgresql::service_name {
-    service { $postgresql::service_name:
-        ensure     => $postgresql::manage_service_ensure,
-        name       => $postgresql::service_name,
-        enable     => $postgresql::manage_service_enable,
-        alias      => '$postgresql',
-      }
-    }
-
-
-  # Extra classes
+  Anchor['postgresql::server::start'] ->
+  Class[$postgresql::install_class] ->
+  Class[$postgresql::config_class] ->
+  Class[$postgresql::service_class] ->
+  Anchor['postgresql::server::end']
 
   if $conf_hash {
     create_resources('postgresql::conf', $conf_hash)
-  }
-
-  if $postgresql::my_class {
-    include $postgresql::my_class
   }
 
   if $postgresql::monitor_class {

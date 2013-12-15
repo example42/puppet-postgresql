@@ -1,7 +1,5 @@
 ---
  :hierarchy:
-   - "%{repo_class}/%{::osfamily}" 
-   - "%{::osfamily}/%{::operatingsystem}-%{::lsbmajdistrelease}"
-   - "%{::osfamily}/%{::operatingsystem}"
-   - "%{::osfamily}"
+   - "install_class/%{install_class}" 
+   - "operatingsystem/%{::operatingsystem}-%{::operatingsystemrelease}"
    - common

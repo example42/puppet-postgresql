@@ -1,0 +1,10 @@
+---
+postgresql::version: '9.1'
+postgresql::package_name: 'postgresql-9.1'
+postgresql::service_name: 'postgresql'
+postgresql::config_file_path:  '/etc/postgresql/9.1/main/postgresql.conf'
+postgresql::config_dir_path: '/etc/postgresql/9.1/main'
+postgresql::hba_file_path:  '/etc/postgresql/9.1/main/pg_hba.conf'
+postgresql::init_file_path:  '/etc/default/postgresql'
+postgresql::data_dir_path: '/var/lib/postgresql/9.1/main'
+postgresql::log_dir_path: '/var/log/postgresql'

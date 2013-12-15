@@ -1,0 +1,10 @@
+---
+postgresql::version: '8.4'
+postgresql::package_name: 'postgresql-server'
+postgresql::service_name: 'postgresql'
+postgresql::config_file_path:  '/var/lib/pgsql/data/postgresql.conf'
+postgresql::config_dir_path: '/var/lib/pgsql/data'
+postgresql::hba_file_path:  '/var/lib/pgsql/data/pg_hba.conf'
+postgresql::init_file_path:  '/etc/sysconfig/pgsql'
+postgresql::data_dir_path: '/var/lib/pgsql/data'
+postgresql::log_dir_path: '/var/lib/pgsql/data/pg_log'
