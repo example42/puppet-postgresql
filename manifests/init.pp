@@ -122,8 +122,8 @@ class postgresql (
 
   Anchor['postgresql::server::start'] ->
   Class[$postgresql::install_class] ->
-  Class[$postgresql::config_class] ->
   Class[$postgresql::setup_class] ->
+  Class[$postgresql::config_class] ->
   Class[$postgresql::service_class] ->
   Anchor['postgresql::server::end']
 

@@ -1,5 +1,5 @@
 ---
-postgresql::version: "%{::postgresql::version}"
+postgresql::version: '9.3'
 postgresql::package_name: "postgresql-%{::postgresql::version}"
 postgresql::service_name: "postgresql-%{::postgresql::version}"
 postgresql::config_file_path:  "/etc/postgresql/%{::postgresql::version}/main/postgresql.conf"

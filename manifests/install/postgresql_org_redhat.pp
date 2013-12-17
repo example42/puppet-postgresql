@@ -7,7 +7,7 @@ class postgresql::install::postgresql_org_redhat {
 
   include postgresql::install
 
-  yum::managed_yumrepo { "pgdg${::postgresql::version}":
+  yum::managed_yumrepo { "postgresql":
     descr          => "PostgreSQL ${postgresql::version_short} \$releasever - \$basearch",
     baseurl        => "http://yum.postgresql.org/${postgresql::version}/redhat/rhel-\$releasever-\$basearch",
     enabled        => 1,

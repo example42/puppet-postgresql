@@ -9,7 +9,7 @@ class postgresql::setup {
     exec { $::postgresql::initdb_exec_command:
       command => $::postgresql::initdb_exec_command,
       user    => $::postgresql::initdb_exec_user,
-      #      creates => $::postgresql::config_file_path,
+      creates => $::postgresql::hba_file_path,
       path    => [ '/sbin', '/bin', '/usr/bin', '/usr/sbin' ],
       alias   => 'postgresql_initdb',
     }
