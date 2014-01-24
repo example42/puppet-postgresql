@@ -30,7 +30,7 @@
 #   override the path attribute. Multiple environment variables
 #   should be specified as an array.
 #   Example: [ http_proxy=http://proxy.example42.com:3128 ]
-
+#
 # [*extract_command*]
 #   The command used to extract the downloaded file.
 #   By default is autocalculated according to the file extension
