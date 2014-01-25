@@ -252,6 +252,8 @@ class postgresql (
   $template_hba          = params_lookup( 'template_hba' ),
   $template_hba_header   = params_lookup( 'template_hba_header' ),
   $template_hba_footer   = params_lookup( 'template_hba_footer' ),
+  $template_ident        = params_lookup( 'template_ident' ),
+  $template_ident_header = params_lookup( 'template_ident_header' ),
   $my_class              = params_lookup( 'my_class' ),
   $source                = params_lookup( 'source' ),
   $source_dir            = params_lookup( 'source_dir' ),
@@ -452,6 +454,8 @@ class postgresql (
   $real_config_file = "${real_config_dir}/postgresql.conf"
 
   $real_config_file_hba = "${real_config_dir}/pg_hba.conf"
+
+  $real_config_file_ident = "${real_config_dir}/pg_ident.conf"
 
   $real_pid_file = $postgresql::pid_file ? {
     ''          => $::operatingsystem ? {

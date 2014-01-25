@@ -31,6 +31,9 @@ class postgresql::params {
   $template_hba_header = 'postgresql/concat_hba_header.erb'
   $template_hba_footer = 'postgresql/concat_hba_footer.erb'
 
+  $template_ident = ''
+  $template_ident_header = 'postgresql/concat_ident_header.erb'
+
   ### Application related parameters
 
   $package = ''
