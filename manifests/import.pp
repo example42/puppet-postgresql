@@ -160,7 +160,7 @@ define postgresql::import (
 
   exec { "Import_${name}":
     cwd     => $real_extract_dir,
-    user    => $postgresql::process_user,
+    user    => $real_user,
     path    => $path,
     creates => $real_flagfile,
     require => Service['postgresql'],
