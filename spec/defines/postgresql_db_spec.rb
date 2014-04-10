@@ -17,7 +17,7 @@ describe 'postgresql::db', :type => :define do
   describe 'Test postgresql::db with owner' do
     let(:params) {{
       'name' => 'example42',
-      'owner' => 'example42' 
+      'owner' => 'example42'
     }}
     it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE example42 OWNER example42/) }
   end
@@ -25,9 +25,14 @@ describe 'postgresql::db', :type => :define do
   describe 'Test postgresql::db with template' do
     let(:params) {{
       'name' => 'example42',
-      'template' => 'example42' 
+      'template' => 'example42'
     }}
     it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE example42 TEMPLATE example42/) }
+  end
+
+  describe 'Test postgresql::db to have correct path' do
+    it { should contain_exec('postgresql_db_example42').with_path(/^(.*:)?\/bin(:.*)?$/) }
+    it { should contain_exec('postgresql_db_example42').with_path(/^(.*:)?\/usr\/bin(:.*)?$/) }
   end
 
 end

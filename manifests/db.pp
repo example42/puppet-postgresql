@@ -46,7 +46,7 @@ define postgresql::db (
 
   exec { "postgresql_db_${name}":
     user    => $postgresql::process_user,
-    path    => '/usr/bin:/bin/usr/sbin:/sbin',
+    path    => '/bin:/usr/bin:/bin/usr/sbin:/sbin',
     unless  => $manage_query_unless,
     command => $manage_query_command,
     require => Service['postgresql'],
