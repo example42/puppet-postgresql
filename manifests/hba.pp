@@ -10,6 +10,8 @@ define postgresql::hba (
   $address = false,
   $option  = '' ) {
 
+  include concat::setup
+
   include postgresql::hbaconcat
 
   $content = $type ? {
