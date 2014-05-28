@@ -146,7 +146,7 @@ define postgresql::import (
   if $real_extract_command {
     exec { "Extract_postgres_import_${name}":
       cwd         => $real_extract_dir,
-      command     => "${real_extract_command} ${extract_dir}/${source_filename}",
+      command     => "${real_extract_command} ${real_extract_dir}/${source_filename}",
       user        => $real_user,
       unless      => "ls ${real_extract_dir}/${real_extracted_file}",
       creates     => "${real_extract_dir}/${real_extracted_file}",
