@@ -51,13 +51,14 @@
 #   }
 #
 define postgresql::role(
-  $rolename   = $name,
-  $superuser  = false,
-  $createrole = false,
-  $createdb   = false,
-  $login      = true,
-  $password   = '',
-  $absent     = false
+  $rolename     = $name,
+  $superuser    = false,
+  $createrole   = false,
+  $createdb     = false,
+  $replication  = false,
+  $login        = true,
+  $password     = '',
+  $absent       = false
 ) {
 
   include 'postgresql'
@@ -66,6 +67,7 @@ define postgresql::role(
   $bool_superuser = any2bool($superuser)
   $bool_createrole = any2bool($createrole)
   $bool_createbd = any2bool($createdb)
+  $bool_replication = any2bool($replication)
   $bool_login = any2bool($login)
 
   $initial_query = "CREATE ROLE \\\"$rolename\\\""
@@ -82,6 +84,10 @@ define postgresql::role(
     true  => 'CREATEDB',
     false => 'NOCREATEDB',
   }
+  $o_replication = $bool_replication ? {
+    true  => 'REPLICATION',
+    false => 'NOREPLICATION',
+  }
   $o_login = $bool_login ? {
     true  => 'LOGIN',
     false => 'NOLOGIN',
@@ -90,7 +96,7 @@ define postgresql::role(
     ''      => '',
     default => "ENCRYPTED PASSWORD '${password}'",
   }
-  $opts = "$o_superuser $o_createrole $o_createdb $o_login $o_password"
+  $opts = "$o_superuser $o_createrole $o_createdb $o_replication $o_login $o_password"
   $create_query = "$initial_query $opts;"
   $drop_query = "DROP ROLE \\\"${rolename}\\\""
 
