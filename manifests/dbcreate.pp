@@ -25,7 +25,7 @@ define postgresql::dbcreate (
     user    => $postgresql::process_user,
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "echo \\\\dg | psql | grep ${role} 2>/dev/null",
-    command => "echo \"create role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit nologin ; alter role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant ${name} to \\\"${role}\\\";\" | /usr/bin/psql",
+    command => "echo \"create role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit nologin ; alter role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant \\\"${name}\\\" to \\\"${role}\\\";\" | /usr/bin/psql",
     require => [Service['postgresql']],
   } -> exec { "db_${name}":
     user    => $postgresql::process_user,
