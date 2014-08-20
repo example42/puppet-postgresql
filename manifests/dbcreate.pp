@@ -23,12 +23,15 @@ define postgresql::dbcreate (
 
   exec { "role_${name}":
     user    => $postgresql::process_user,
+    cwd     => '/tmp',
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "echo \\\\dg | psql | grep ${role} 2>/dev/null",
     command => "echo \"create role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit nologin ; alter role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant \\\"${name}\\\" to \\\"${role}\\\";\" | /usr/bin/psql",
     require => [Service['postgresql']],
-  } -> exec { "db_${name}":
+  } -> 
+  exec { "db_${name}":
     user    => $postgresql::process_user,
+    cwd     => '/tmp',
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "psql --list -t -A | grep -q \"^${name}|\"",
     command => "echo \"create database \\\"${name}\\\" with OWNER=\\\"${role}\\\" TEMPLATE=${real_template} ENCODING='${encoding}' LC_COLLATE='${locale}' LC_CTYPE='${locale}';\" | /usr/bin/psql",
