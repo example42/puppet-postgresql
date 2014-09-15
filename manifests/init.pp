@@ -401,6 +401,7 @@ class postgresql (
         'Ubuntu'                        => $::lsbmajdistrelease ? {
           /^12/   => '9.1',
           /^13/   => '9.1',
+          /^14/   => '9.3',
           default => '8.4',
         },
         'Mint'                          => $::lsbmajdistrelase ? {
