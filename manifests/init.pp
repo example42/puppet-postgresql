@@ -309,9 +309,9 @@ class postgresql (
   $log_file              = params_lookup( 'log_file' ),
   $port                  = params_lookup( 'port' ),
   $protocol              = params_lookup( 'protocol' ),
-  $db_encoding              = params_lookup( 'encoding' ),
-  $db_locale                = params_lookup( 'locale' ),
-  $db_template              = params_lookup( 'template' ),
+  $db_encoding           = params_lookup( 'db_encoding' ),
+  $db_locale             = params_lookup( 'db_locale' ),
+  $db_template           = params_lookup( 'db_template' ),
   ) inherits postgresql::params {
 
   $bool_use_postgresql_repo=any2bool($use_postgresql_repo)
