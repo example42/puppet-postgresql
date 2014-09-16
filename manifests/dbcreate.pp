@@ -22,16 +22,9 @@ define postgresql::dbcreate (
     default => $locale
   }
 
-  $param_templace = $template ? {
+  $real_templace = $template ? {
     undef => $postgresql::db_template, #defaults to ''
     default => $template
-  }
-  $real_template = $param_template ? {
-    ''      => $postgresql::version ? {
-      '9.3'   => 'template0',
-      default => 'template1',
-    },
-    default => $param_template,
   }
 
   exec { "role_${name}":

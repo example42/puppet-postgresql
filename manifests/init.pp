@@ -240,7 +240,7 @@
 #
 # [*db_template*]
 #   The template for postgresql::dbcreate (not postgresql::db)
-#   Defaults to 'template0' for postgresql < 9.3 and template1
+#   Defaults to 'template1' for postgresql < 9.3 and template0
 #   for postgresql 9.3
 #
 # == Examples
