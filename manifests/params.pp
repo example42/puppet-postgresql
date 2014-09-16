@@ -115,4 +115,9 @@ class postgresql::params {
   $debug = false
   $audit_only = false
 
+  #overridable defaults for dbcreate
+  $db_encoding     = 'SQL_ASCII'
+  $db_locale       = 'C'
+  $db_template     = ''
+
 }

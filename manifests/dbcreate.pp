@@ -12,19 +12,18 @@ define postgresql::dbcreate (
   $auth_method  = 'md5',
   $auth_options = '') {
   include postgresql
-  include postgresql::dbcreate::params
 
   $real_encoding = $encoding ? {
-    undef => $postgresql::dbcreate::params::encoding,
+    undef => $postgresql::db_encoding,
     default => $encoding
   }
   $real_locale = $locale ? {
-    undef => $postgresql::dbcreate::params::locale,
+    undef => $postgresql::db_locale,
     default => $locale
   }
 
   $param_templace = $template ? {
-    undef => $postgresql::dbcreate::params::template, #defaults to ''
+    undef => $postgresql::db_template, #defaults to ''
     default => $template
   }
   $real_template = $param_template ? {

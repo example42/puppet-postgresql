@@ -230,6 +230,18 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $postgresql_protocol
 #
+# [*db_encoding*]
+#   The encoding for postgresql::dbcreate (not postgresql::db)
+#   Defaults to 'SQL_ASCII'
+#
+# [*db_locale*]
+#   The locale for postgresql::dbcreate (not postgresql::db)
+#   Defaults to 'C'
+#
+# [*db_template*]
+#   The template for postgresql::dbcreate (not postgresql::db)
+#   Defaults to 'template0' for postgresql < 9.3 and template1
+#   for postgresql 9.3
 #
 # == Examples
 #
@@ -293,7 +305,10 @@ class postgresql (
   $log_dir               = params_lookup( 'log_dir' ),
   $log_file              = params_lookup( 'log_file' ),
   $port                  = params_lookup( 'port' ),
-  $protocol              = params_lookup( 'protocol' )
+  $protocol              = params_lookup( 'protocol' ),
+  $db_encoding              = params_lookup( 'encoding' ),
+  $db_locale                = params_lookup( 'locale' ),
+  $db_template              = params_lookup( 'template' ),
   ) inherits postgresql::params {
 
   $bool_use_postgresql_repo=any2bool($use_postgresql_repo)
