@@ -3,7 +3,7 @@
 #
 define postgresql::dbcreate (
   $role,
-  $encoding     = undef, # see postgresql::dbcreate::params
+  $encoding     = undef,
   $locale       = undef,
   $template     = undef,
   $password     = '',
