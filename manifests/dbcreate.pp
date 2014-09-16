@@ -15,14 +15,17 @@ define postgresql::dbcreate (
   include postgresql::dbcreate::params
 
   $real_encoding = $encoding ? {
-    default => $postgresql::dbcreate::params::encoding
+    undef => $postgresql::dbcreate::params::encoding,
+    default => $encoding
   }
   $real_locale = $locale ? {
-    default => $postgresql::dbcreate::params::locale
+    undef => $postgresql::dbcreate::params::locale,
+    default => $locale
   }
 
   $param_templace = $template ? {
-    default => $postgresql::dbcreate::params::template #defaults to ''
+    undef => $postgresql::dbcreate::params::template, #defaults to ''
+    default => $template
   }
   $real_template = $param_template ? {
     ''      => $postgresql::version ? {
