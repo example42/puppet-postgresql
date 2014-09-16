@@ -233,15 +233,18 @@
 # [*db_encoding*]
 #   The encoding for postgresql::dbcreate (not postgresql::db)
 #   Defaults to 'SQL_ASCII'
+#   See postgresql createdb documentation for limitations
 #
 # [*db_locale*]
 #   The locale for postgresql::dbcreate (not postgresql::db)
 #   Defaults to 'C'
+#   See postgresql createdb documentation for limitations
 #
 # [*db_template*]
 #   The template for postgresql::dbcreate (not postgresql::db)
-#   Defaults to 'template1' for postgresql < 9.3 and template0
+#   Defaults to 'template1' for postgresql != 9.3 and template0
 #   for postgresql 9.3
+#   See postgresql createdb documentation for limitations
 #
 # == Examples
 #
