@@ -21,18 +21,18 @@ define postgresql::db (
 ) {
 
   # Generate query
-  $manage_query_start = "CREATE DATABASE ${db_name}"
+  $manage_query_start = "CREATE DATABASE \\\"${db_name}\\\""
 
   if $owner == undef {
     $manage_query_owner = ""
   } else {
-    $manage_query_owner = " OWNER ${owner}"
+    $manage_query_owner = " OWNER \\\"${owner}\\\""
   }
 
   if $template == undef {
     $manage_query_template = ""
   } else {
-    $manage_query_template = " TEMPLATE ${template}"
+    $manage_query_template = " TEMPLATE \\\"${template}\\\""
   }
 
   $manage_query_end = ";"
