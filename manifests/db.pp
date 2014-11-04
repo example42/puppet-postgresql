@@ -18,6 +18,7 @@ define postgresql::db (
   $db_name         = $name,
   $owner           = undef,
   $template        = undef,
+  $encoding        = undef,
 ) {
 
   # Generate query
@@ -35,9 +36,15 @@ define postgresql::db (
     $manage_query_template = " TEMPLATE \\\"${template}\\\""
   }
 
+  if $encoding == undef {
+    $manage_query_encoding = ""
+  } else {
+    $manage_query_encoding = " ENCODING \\\"${encoding}\\\""
+  }
+
   $manage_query_end = ";"
 
-  $manage_query = "${manage_query_start}${manage_query_owner}${manage_query_template}${manage_query_end}"
+  $manage_query = "${manage_query_start}${manage_query_owner}${manage_query_template}${manage_query_encoding}${manage_query_end}"
 
 
   # Gerate options
