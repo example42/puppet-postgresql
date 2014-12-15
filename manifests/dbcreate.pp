@@ -10,8 +10,11 @@ define postgresql::dbcreate (
   $conntype     = 'host',
   $address      = '127.0.0.1/32',
   $auth_method  = 'md5',
-  $auth_options = '') {
+  $auth_options = '',
+  $superuser    = false) {
   include postgresql
+
+  $bool_superuser = any2bool($superuser)
 
   $real_template = $template ? {
     ''      => $postgresql::version ? {
@@ -21,11 +24,16 @@ define postgresql::dbcreate (
     default => $template,
   }
 
+  $o_superuser = $bool_superuser ? {
+    true  => 'SUPERUSER',
+    false => 'NOSUPERUSER',
+  }
+
   exec { "role_${name}":
     user    => $postgresql::process_user,
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "echo \\\\dg | psql | grep ${role} 2>/dev/null",
-    command => "echo \"create role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit nologin ; alter role \\\"${role}\\\" nosuperuser nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant \\\"${name}\\\" to \\\"${role}\\\";\" | /usr/bin/psql",
+    command => "echo \"create role \\\"${role}\\\" ${o_superuser} nocreatedb nocreaterole noinherit nologin ; alter role \\\"${role}\\\" ${o_superuser} nocreatedb nocreaterole noinherit login encrypted password '${password}'; grant \\\"${name}\\\" to \\\"${role}\\\";\" | /usr/bin/psql",
     require => [Service['postgresql']],
   } -> exec { "db_${name}":
     user    => $postgresql::process_user,
