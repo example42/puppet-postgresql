@@ -39,7 +39,7 @@ define postgresql::db (
   if $encoding == undef {
     $manage_query_encoding = ""
   } else {
-    $manage_query_encoding = " ENCODING \\\"${encoding}\\\""
+    $manage_query_encoding = " ENCODING '${encoding}'"
   }
 
   $manage_query_end = ";"
