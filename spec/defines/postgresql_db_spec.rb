@@ -10,7 +10,7 @@ describe 'postgresql::db', :type => :define do
   }
 
   describe 'Test postgresql::db with db name' do
-    it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE example42;/) }
+    it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE \\\"example42\\\";/) }
     it { should contain_exec('postgresql_db_example42').with_unless('psql --list -t -A | grep -q "^example42|"') }
   end
 
@@ -19,7 +19,7 @@ describe 'postgresql::db', :type => :define do
       'name' => 'example42',
       'owner' => 'example42'
     }}
-    it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE example42 OWNER example42/) }
+    it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE \\\"example42\\\" OWNER \\\"example42\\\"/) }
   end
 
   describe 'Test postgresql::db with template' do
@@ -27,7 +27,7 @@ describe 'postgresql::db', :type => :define do
       'name' => 'example42',
       'template' => 'example42'
     }}
-    it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE example42 TEMPLATE example42/) }
+    it { should contain_exec('postgresql_db_example42').with_command(/CREATE DATABASE \\\"example42\\\" TEMPLATE \\\"example42\\\"/) }
   end
 
   describe 'Test postgresql::db to have correct path' do

@@ -4,7 +4,7 @@ define postgresql::cluster(
   $owner        = '',
   $group        = '',
   $locale       = '',
-  $absent       = false,
+  $absent       = false
 ) {
 
   include postgresql

@@ -18,7 +18,7 @@ define postgresql::db (
   $db_name         = $name,
   $owner           = undef,
   $template        = undef,
-  $encoding        = undef,
+  $encoding        = undef
 ) {
 
   # Generate query
