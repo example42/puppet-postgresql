@@ -25,24 +25,24 @@ define postgresql::db (
   $manage_query_start = "CREATE DATABASE \\\"${db_name}\\\""
 
   if $owner == undef {
-    $manage_query_owner = ""
+    $manage_query_owner = ''
   } else {
     $manage_query_owner = " OWNER \\\"${owner}\\\""
   }
 
   if $template == undef {
-    $manage_query_template = ""
+    $manage_query_template = ''
   } else {
     $manage_query_template = " TEMPLATE \\\"${template}\\\""
   }
 
   if $encoding == undef {
-    $manage_query_encoding = ""
+    $manage_query_encoding = ''
   } else {
     $manage_query_encoding = " ENCODING '${encoding}'"
   }
 
-  $manage_query_end = ";"
+  $manage_query_end = ';'
 
   $manage_query = "${manage_query_start}${manage_query_owner}${manage_query_template}${manage_query_encoding}${manage_query_end}"
 

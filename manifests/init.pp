@@ -504,12 +504,12 @@ class postgresql (
   }
 
   service { 'postgresql':
-    ensure     => $postgresql::manage_service_ensure,
-    name       => $postgresql::real_service,
-    enable     => $postgresql::manage_service_enable,
-    hasstatus  => $postgresql::service_status,
-    pattern    => $postgresql::process,
-    require    => Package['postgresql'],
+    ensure    => $postgresql::manage_service_ensure,
+    name      => $postgresql::real_service,
+    enable    => $postgresql::manage_service_enable,
+    hasstatus => $postgresql::service_status,
+    pattern   => $postgresql::process,
+    require   => Package['postgresql'],
   }
 
   file { 'postgresql.conf':

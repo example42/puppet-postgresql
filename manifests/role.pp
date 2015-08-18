@@ -68,7 +68,7 @@ define postgresql::role(
   $bool_createbd = any2bool($createdb)
   $bool_login = any2bool($login)
 
-  $initial_query = "CREATE ROLE \\\"$rolename\\\""
+  $initial_query = "CREATE ROLE \\\"${rolename}\\\""
 
   $o_superuser = $bool_superuser ? {
     true  => 'SUPERUSER',
@@ -90,13 +90,13 @@ define postgresql::role(
     ''      => '',
     default => "ENCRYPTED PASSWORD '${password}'",
   }
-  $opts = "$o_superuser $o_createrole $o_createdb $o_login $o_password"
-  $create_query = "$initial_query $opts;"
+  $opts = "${o_superuser} ${o_createrole} ${o_createdb} ${o_login} ${o_password}"
+  $create_query = "${initial_query} ${opts};"
   $drop_query = "DROP ROLE \\\"${rolename}\\\""
 
   $db_command = $bool_absent ? {
-    true    => "echo \"$drop_query\"|psql",
-    default => "echo \"$create_query\"|psql",
+    true    => "echo \"${drop_query}\"|psql",
+    default => "echo \"${create_query}\"|psql",
   }
   $cmd = "echo \\\\dg|psql|tail -n +4|awk '{print \$1}'|grep '^${rolename}$'"
   $db_unless = $bool_absent ? {

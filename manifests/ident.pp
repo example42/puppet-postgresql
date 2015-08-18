@@ -4,10 +4,10 @@ define postgresql::ident ($map_name, $system_user, $db_user, $ensure = 'present'
   include postgresql::identconcat
 
   concat::fragment { "ident_fragment_${name}":
+    ensure  => $ensure,
     target  => $postgresql::real_config_file_ident,
     content => "${map_name}\t${system_user} ${db_user}\n",
     order   => $order,
-    ensure  => $ensure,
     notify  => Service['postgresql'],
   }
 }

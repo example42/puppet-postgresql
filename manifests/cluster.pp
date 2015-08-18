@@ -11,28 +11,28 @@ define postgresql::cluster(
 
   $bool_absent=any2bool($absent)
 
-  $create_cmd = "pg_createcluster $version $cluster_name"
+  $create_cmd = "pg_createcluster ${version} ${cluster_name}"
 
   $o_owner = $owner ? {
-    ''      => "-u $postgresql::config_file_owner",
-    default => "-u $owner",
+    ''      => "-u ${::postgresql::config_file_owner}",
+    default => "-u ${owner}",
   }
 
   $o_group = $group ? {
-    ''      => "-g $postgresql::config_file_group",
-    default => "-g $group",
+    ''      => "-g ${::postgresql::config_file_group}",
+    default => "-g ${group}",
   }
 
   $o_locale = $locale ? {
     ''      => '',
-    default => "--locale=$locale",
+    default => "--locale=${locale}",
   }
-  $options = "$o_owner $o_group $o_locale"
-  $full_create_cmd = "$create_cmd $options"
+  $options = "${o_owner} ${o_group} ${o_locale}"
+  $full_create_cmd = "${create_cmd} ${options}"
 
-  $drop_cmd = "pg_dropcluster --stop $version $cluster_name"
+  $drop_cmd = "pg_dropcluster --stop ${version} ${cluster_name}"
 
-  $ls_cmd = "pg_lsclusters -h|awk '{ print \$2 }'|grep $cluster_name"
+  $ls_cmd = "pg_lsclusters -h|awk '{ print \$2 }'|grep ${cluster_name}"
 
   $manage_cmd = $bool_absent ? {
     true  => $drop_cmd,
