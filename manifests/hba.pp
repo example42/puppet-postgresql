@@ -22,7 +22,7 @@ define postgresql::hba (
     target  => $postgresql::real_config_file_hba,
     content => $content,
     order   => $order,
-    notify  => Service['postgresql'],
+    notify  => $postgresql::manage_service_autorestart,
   }
 
 }

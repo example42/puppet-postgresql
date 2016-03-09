@@ -16,7 +16,7 @@ class postgresql::hbaconcat {
     target  => $postgresql::real_config_file_hba,
     content => template($postgresql::template_hba_header),
     order   => '01',
-    notify  => Service['postgresql'],
+    notify  => $postgresql::manage_service_autorestart,
   }
 
   # The File Footer. With default acls
@@ -24,7 +24,7 @@ class postgresql::hbaconcat {
     target  => $postgresql::real_config_file_hba,
     content => template($postgresql::template_hba_footer),
     order   => '90',
-    notify  => Service['postgresql'],
+    notify  => $postgresql::manage_service_autorestart,
   }
 
 }
