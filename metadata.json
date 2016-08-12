@@ -1,6 +1,6 @@
 {
   "name": "example42-postgresql",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "summary": "Puppet module for postgresql",
   "author": "Alessandro Franceschi",
   "description": "This module installs and manages postgresql. Check README.rdoc for details. Puppi is required for some common functions: you can install them without using the whole module. Monitor and firewall dependencies are needed only if the relevant features are enabled",
