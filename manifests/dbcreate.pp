@@ -3,9 +3,9 @@
 #
 define postgresql::dbcreate (
   $role,
-  $encoding     = 'SQL_ASCII',
-  $locale       = 'C',
-  $template     = '',
+  $encoding     = undef,
+  $locale       = undef,
+  $template     = undef,
   $password     = '',
   $conntype     = 'host',
   $address      = '127.0.0.1/32',
@@ -13,12 +13,18 @@ define postgresql::dbcreate (
   $auth_options = '') {
   include postgresql
 
-  $real_template = $template ? {
-    ''      => $postgresql::version ? {
-      '9.3'   => 'template0',
-      default => 'template1',
-    },
-    default => $template,
+  $real_encoding = $encoding ? {
+    undef => $postgresql::db_encoding,
+    default => $encoding
+  }
+  $real_locale = $locale ? {
+    undef => $postgresql::db_locale,
+    default => $locale
+  }
+
+  $real_templace = $template ? {
+    undef => $postgresql::db_template, #defaults to ''
+    default => $template
   }
 
   exec { "role_${name}":
@@ -31,7 +37,7 @@ define postgresql::dbcreate (
     user    => $postgresql::process_user,
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     unless  => "psql --list -t -A | grep -q \"^${name}|\"",
-    command => "echo \"create database \\\"${name}\\\" with OWNER=\\\"${role}\\\" TEMPLATE=${real_template} ENCODING='${encoding}' LC_COLLATE='${locale}' LC_CTYPE='${locale}';\" | /usr/bin/psql",
+    command => "echo \"create database \\\"${name}\\\" with OWNER=\\\"${role}\\\" TEMPLATE=${real_template} ENCODING='${real_encoding}' LC_COLLATE='${real_locale}' LC_CTYPE='${real_locale}';\" | /usr/bin/psql",
     require => [Service['postgresql']];
   }
 
